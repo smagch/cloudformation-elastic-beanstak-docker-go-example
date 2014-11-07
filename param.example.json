@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "VpcId",
+    "ParameterValue": "default-vpc-id"
+  },
+  {
+    "ParameterKey": "Subnets",
+    "ParameterValue": "subnets-1, subnet-2"
+  },
+  {
+    "ParameterKey": "S3Key",
+    "ParameterValue": "docker-sample.zip"
+  },
+  {
+    "ParameterKey": "S3Bucket",
+    "ParameterValue": "smagch-docker"
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "AWS CloudFormation Docker Test",
+  "Parameters" : {
+    "Subnets": {
+      "Type": "CommaDelimitedList",
+      "Description": "Subnets"
+    },
+    "VpcId": {
+      "Type": "String",
+      "Description": "VPC Id"
+    },
+    "S3Bucket": {
+      "Type": "String",
+      "Description": "S3 Bucket name"
+    },
+    "S3Key": {
+      "Type": "String",
+      "Description": "S3 Key name"
+    }
+  },
+  "Resources" : {
+    "SampleApplication" : {
+      "Type" : "AWS::ElasticBeanstalk::Application",
+      "Properties" : {
+        "Description" : "AWS Elastic Beanstalk Docker Sample Application",
+        "ApplicationVersions" : [{
+          "VersionLabel" : "Initial Version",
+          "Description" : "Version 1.0",
+          "SourceBundle" : {
+            "S3Bucket" : {"Ref": "S3Bucket"},
+            "S3Key": {"Ref": "S3Key"}
+          }
+        }]
+      }
+    },
+    "SampleEnvironment" : {
+      "Type" : "AWS::ElasticBeanstalk::Environment",
+      "Properties" : {
+        "ApplicationName" : { "Ref" : "SampleApplication" },
+        "Description" :  "AWS Elastic Beanstalk Environment running Docker Sample Application",
+        "SolutionStackName" : "64bit Amazon Linux 2014.09 v1.0.9 running Docker 1.2.0",
+        "VersionLabel" : "Initial Version",
+        "OptionSettings": [
+          {
+            "Namespace": "aws:ec2:vpc",
+            "OptionName": "VPCId",
+            "Value": { "Ref" : "VpcId" }
+          },
+          {
+            "Namespace": "aws:ec2:vpc",
+            "OptionName": "Subnets",
+            "Value" : {
+              "Fn::Join": [",", { "Ref" : "Subnets" }]
+            }
+          },
+          {
+            "Namespace": "aws:ec2:vpc",
+            "OptionName": "ELBSubnets",
+            "Value" : {
+              "Fn::Select": ["0", {"Ref" : "Subnets" }]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "Outputs" : {
+    "URL" : {
+      "Description" : "The URL of the Elastic Beanstalk environment",
+      "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : ["SampleEnvironment", "EndpointURL"] }]]}
+    }
+  }
+}
