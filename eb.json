@@ -17,6 +17,14 @@
     "S3Key": {
       "Type": "String",
       "Description": "S3 Key name"
+    },
+    "DatabaseURL": {
+      "Type": "String",
+      "Description": "Postgres URL to listen"
+    },
+    "SecurityGroup": {
+      "Type": "String",
+      "Description": "ElasticBeanstalk Security group that can access Database"
     }
   },
   "Resources" : {
@@ -65,6 +73,16 @@
             "Value" : {
               "Fn::Select": ["0", {"Ref" : "Subnets" }]
             }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "DATABASE_URL",
+            "Value": {"Ref": "DatabaseURL"}
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "SecurityGroups",
+            "Value": {"Ref": "SecurityGroup"}
           }
         ]
       }

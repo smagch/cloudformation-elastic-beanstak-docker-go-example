@@ -14,5 +14,13 @@
   {
     "ParameterKey": "S3Bucket",
     "ParameterValue": "smagch-docker"
+  },
+  {
+    "ParameterKey": "DatabaseURL",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "SecurityGroup",
+    "ParameterValue": "your-security-group-that-can-access-database"
   }
 ]

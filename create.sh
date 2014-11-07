@@ -23,7 +23,7 @@ KEY_NAME=$(find_param S3Key)
 git archive --format zip HEAD | aws s3 cp - s3://${BUCKET_NAME}/${KEY_NAME}
 
 aws cloudformation create-stack \
-   --stack-name my-test-stack \
+   --stack-name my-eb-stack \
    --template-body file://eb.json \
    --region ap-northeast-1 \
    --parameters file://param.json
