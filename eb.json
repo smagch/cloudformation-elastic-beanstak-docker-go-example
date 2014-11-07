@@ -43,6 +43,11 @@
         "VersionLabel" : "Initial Version",
         "OptionSettings": [
           {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "InstanceType",
+            "Value": "t2.micro"
+          },
+          {
             "Namespace": "aws:ec2:vpc",
             "OptionName": "VPCId",
             "Value": { "Ref" : "VpcId" }
