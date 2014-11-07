@@ -6,4 +6,4 @@ COPY . /go/src/app
 
 EXPOSE 8080
 RUN ["go", "install", "."]
-RUN ["app"]
+CMD ["app"]
