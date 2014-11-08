@@ -25,6 +25,10 @@
     "SecurityGroup": {
       "Type": "String",
       "Description": "ElasticBeanstalk Security group that can access Database"
+    },
+    "HealthcheckURL": {
+      "Type": "String",
+      "Description": "ElasticBeanstalk app's Healthcheck URL"
     }
   },
   "Resources" : {
@@ -83,6 +87,11 @@
             "Namespace": "aws:autoscaling:launchconfiguration",
             "OptionName": "SecurityGroups",
             "Value": {"Ref": "SecurityGroup"}
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application",
+            "OptionName": "Application Healthcheck URL",
+            "Value": {"Ref": "HealthcheckURL"}
           }
         ]
       }

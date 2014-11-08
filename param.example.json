@@ -22,5 +22,9 @@
   {
     "ParameterKey": "SecurityGroup",
     "ParameterValue": "your-security-group-that-can-access-database"
+  },
+  {
+    "ParameterKey": "HealthcheckURL",
+    "ParameterValue": "/ping"
   }
 ]

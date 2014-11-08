@@ -40,6 +40,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handlePing(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
 func main() {
 	flag.Parse()
 	var err error
@@ -59,5 +63,6 @@ func main() {
 	}
 	testEnv = os.Getenv("TEST_ENV")
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/ping", handlePing)
 	http.ListenAndServe(*flagAddr, nil)
 }
