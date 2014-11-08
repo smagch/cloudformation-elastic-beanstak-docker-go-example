@@ -26,5 +26,9 @@
   {
     "ParameterKey": "HealthcheckURL",
     "ParameterValue": "/ping"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": ""
   }
 ]

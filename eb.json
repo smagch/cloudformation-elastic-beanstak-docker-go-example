@@ -29,6 +29,10 @@
     "HealthcheckURL": {
       "Type": "String",
       "Description": "ElasticBeanstalk app's Healthcheck URL"
+    },
+    "KeyName": {
+      "Type": "String",
+      "Description": "EC2 Key name"
     }
   },
   "Resources" : {
@@ -92,6 +96,11 @@
             "Namespace": "aws:elasticbeanstalk:application",
             "OptionName": "Application Healthcheck URL",
             "Value": {"Ref": "HealthcheckURL"}
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "EC2KeyName",
+            "Value": {"Ref": "KeyName"}
           }
         ]
       }
