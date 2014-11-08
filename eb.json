@@ -101,8 +101,57 @@
             "Namespace": "aws:autoscaling:launchconfiguration",
             "OptionName": "EC2KeyName",
             "Value": {"Ref": "KeyName"}
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "IamInstanceProfile",
+            "Value": { "Ref": "EbAppInstanceProfile" }
           }
         ]
+      }
+    },
+    "EbAppRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [{
+            "Effect": "Allow",
+            "Principal": {
+              "Service": [
+                "ec2.amazonaws.com"
+              ]
+            },
+            "Action": [
+              "sts:AssumeRole"
+            ]
+          }]
+        },
+        "Path": "/"
+      }
+    },
+    "RolePolicies": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "EbApp",
+        "PolicyDocument": {
+          "Statement": [{
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          }]
+        },
+        "Roles": [{
+          "Ref": "EbAppRole"
+        }]
+      }
+    },
+    "EbAppInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [{
+          "Ref": "EbAppRole"
+        }]
       }
     }
   },
