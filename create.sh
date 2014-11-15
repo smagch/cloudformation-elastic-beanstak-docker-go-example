@@ -16,15 +16,30 @@ find_param() {
     '.[] | select(.ParameterKey == $keyName) | .ParameterValue'
 }
 
+upload_app_template() {
+  local src="$1"
+  local bucketName="$2"
+  local keyName="$3"
+  aws s3 cp $src s3://${bucketName}/${keyName}
+  return $?
+}
+
 BUCKET_NAME=$(find_param S3Bucket)
 KEY_NAME=$(find_param S3Key)
+
+# upload eb.json to master
+upload_app_template eb.json $BUCKET_NAME "$(find_param AppTemplateKey)"
+if [ $? -ne 0 ]; then
+  echo "Failed to upload eb.json to S3" >&2
+  exit 1
+fi
 
 # upload git archive to S3
 git archive --format zip HEAD | aws s3 cp - s3://${BUCKET_NAME}/${KEY_NAME}
 
 aws cloudformation create-stack \
-   --stack-name my-eb-stack-iam \
-   --template-body file://eb.json \
+   --stack-name my-eb-stack-iam3 \
+   --template-body file://master.json \
    --region ap-northeast-1 \
    --parameters file://param.json \
    --capabilities CAPABILITY_IAM

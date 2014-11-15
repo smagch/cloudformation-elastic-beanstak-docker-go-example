@@ -1,0 +1,76 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "AWS CloudFormation Master Stack Test",
+  "Parameters" : {
+    "Subnets": {
+      "Type": "String",
+      "Description": "Subnets"
+    },
+    "VpcId": {
+      "Type": "String",
+      "Description": "VPC Id"
+    },
+    "S3Bucket": {
+      "Type": "String",
+      "Description": "S3 Bucket name"
+    },
+    "S3Key": {
+      "Type": "String",
+      "Description": "S3 Key name"
+    },
+    "DatabaseURL": {
+      "Type": "String",
+      "Description": "Postgres URL to listen"
+    },
+    "SecurityGroup": {
+      "Type": "String",
+      "Description": "ElasticBeanstalk Security group that can access Database"
+    },
+    "HealthcheckURL": {
+      "Type": "String",
+      "Description": "ElasticBeanstalk app's Healthcheck URL"
+    },
+    "KeyName": {
+      "Type": "String",
+      "Description": "EC2 Key name"
+    },
+    "AppTemplateKey": {
+      "Type": "String",
+      "Description": "Application Template S3 Key"
+    }
+  },
+  "Resources" : {
+    "App1" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : {
+          "Fn::Join" : ["/",
+            [
+              "https://s3-ap-northeast-1.amazonaws.com",
+              {"Ref": "S3Bucket"},
+              {"Ref": "AppTemplateKey"}
+            ]
+          ]
+        },
+        "Parameters" : {
+          "Subnets": {"Ref": "Subnets"},
+          "VpcId": {"Ref": "VpcId"},
+          "S3Bucket": {"Ref": "S3Bucket"},
+          "S3Key": {"Ref": "S3Key"},
+          "DatabaseURL": {"Ref": "DatabaseURL"},
+          "SecurityGroup": {"Ref": "SecurityGroup"},
+          "HealthcheckURL": {"Ref": "HealthcheckURL"},
+          "KeyName": {"Ref": "KeyName"}
+        }
+      }
+    }
+  },
+  "Outputs" : {
+    "URL": {
+      "Description": "URL of the AWS Elastic Beanstalk Environment",
+      "Value": {
+        "Fn::GetAtt": ["App1", "Outputs.URL"]
+      }
+    }
+  }
+}

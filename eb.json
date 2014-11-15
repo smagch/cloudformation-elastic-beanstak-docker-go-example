@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-  "Description" : "AWS CloudFormation Docker Test",
+  "Description" : "AWS CloudFormation Docker App Stack Test",
   "Parameters" : {
     "Subnets": {
       "Type": "CommaDelimitedList",
