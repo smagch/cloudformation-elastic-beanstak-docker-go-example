@@ -2,9 +2,13 @@
   "AWSTemplateFormatVersion" : "2010-09-09",
   "Description" : "AWS CloudFormation Master Stack Test",
   "Parameters" : {
-    "Subnets": {
+    "PublicSubnet": {
       "Type": "String",
-      "Description": "Subnets"
+      "Description": "Public Subnet"
+    },
+    "PrivateSubnet": {
+      "Type": "String",
+      "Description": "PrivateSubnet"
     },
     "VpcId": {
       "Type": "String",
@@ -17,10 +21,6 @@
     "S3Key": {
       "Type": "String",
       "Description": "S3 Key name"
-    },
-    "DatabaseURL": {
-      "Type": "String",
-      "Description": "Postgres URL to listen"
     },
     "SecurityGroup": {
       "Type": "String",
@@ -37,9 +37,60 @@
     "AppTemplateKey": {
       "Type": "String",
       "Description": "Application Template S3 Key"
+    },
+    "ResourcesTemplateKey": {
+      "Description": "The key of the template for the EB resources and application substack",
+      "Type": "String",
+      "Default": "resource.json"
+    },
+    "DBUsername": {
+      "NoEcho": "true",
+      "Description": "The database admin account username",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "[a-zA-Z][a-zA-Z0-9]*",
+      "ConstraintDescription": "must begin with a letter and contain only alphanumeric characters."
+    },
+    "DBPassword": {
+      "NoEcho": "true",
+      "Description": "The database admin account password",
+      "Type": "String",
+      "MinLength": "8",
+      "MaxLength": "41",
+      "AllowedPattern": "[a-zA-Z0-9]*",
+      "ConstraintDescription": "must contain only alphanumeric characters."
     }
   },
   "Resources" : {
+    "AppResource": {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : {
+          "Fn::Join" : ["/",
+            [
+              "https://s3-ap-northeast-1.amazonaws.com",
+              {"Ref": "S3Bucket"},
+              {"Ref": "ResourcesTemplateKey"}
+            ]
+          ]
+        },
+        "Parameters" : {
+          "Subnets": {
+            "Fn::Join": [",",
+              [
+                {"Ref": "PublicSubnet"},
+                {"Ref": "PrivateSubnet"}
+              ]
+            ]
+          },
+          "VpcId": {"Ref": "VpcId"},
+          "SecurityGroup": {"Ref": "SecurityGroup"},
+          "DBUsername": {"Ref": "DBUsername"},
+          "DBPassword": {"Ref": "DBPassword"}
+        }
+      }
+    },
     "App1" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
@@ -53,11 +104,11 @@
           ]
         },
         "Parameters" : {
-          "Subnets": {"Ref": "Subnets"},
+          "Subnets": {"Ref": "PublicSubnet"},
           "VpcId": {"Ref": "VpcId"},
           "S3Bucket": {"Ref": "S3Bucket"},
           "S3Key": {"Ref": "S3Key"},
-          "DatabaseURL": {"Ref": "DatabaseURL"},
+          "DatabaseURL": {"Fn::GetAtt": ["AppResource", "Outputs.DatabaseURL"]},
           "SecurityGroup": {"Ref": "SecurityGroup"},
           "HealthcheckURL": {"Ref": "HealthcheckURL"},
           "KeyName": {"Ref": "KeyName"}

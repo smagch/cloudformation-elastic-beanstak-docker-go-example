@@ -4,8 +4,12 @@
     "ParameterValue": "default-vpc-id"
   },
   {
-    "ParameterKey": "Subnets",
-    "ParameterValue": "subnets-1, subnet-2"
+    "ParameterKey": "PublicSubnet",
+    "ParameterValue": "subnets-1",
+  },
+  {
+    "ParameterKey": "PrivateSubnet",
+    "ParameterKey": "subnet-2",
   },
   {
     "ParameterKey": "S3Key",
@@ -14,10 +18,6 @@
   {
     "ParameterKey": "S3Bucket",
     "ParameterValue": "smagch-docker"
-  },
-  {
-    "ParameterKey": "DatabaseURL",
-    "ParameterValue": ""
   },
   {
     "ParameterKey": "SecurityGroup",
@@ -33,6 +33,18 @@
   },
   {
     "ParameterKey": "AppTemplateKey",
-    "ParameterValue": "eb-template.json"
+    "ParameterValue": "eb.json"
+  },
+  {
+    "ParameterKey": "DBUserName",
+    "ParameterValue": "mydb"
+  },
+  {
+    "ParameterKey": "DBPassword",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ResourcesTemplateKey",
+    "ParameterValue": "resource.json"
   }
 ]
