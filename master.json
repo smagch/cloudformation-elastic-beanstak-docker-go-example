@@ -22,10 +22,6 @@
       "Type": "String",
       "Description": "S3 Key name"
     },
-    "SecurityGroup": {
-      "Type": "String",
-      "Description": "ElasticBeanstalk Security group that can access Database"
-    },
     "HealthcheckURL": {
       "Type": "String",
       "Description": "ElasticBeanstalk app's Healthcheck URL"
@@ -85,7 +81,6 @@
             ]
           },
           "VpcId": {"Ref": "VpcId"},
-          "SecurityGroup": {"Ref": "SecurityGroup"},
           "DBUsername": {"Ref": "DBUsername"},
           "DBPassword": {"Ref": "DBPassword"}
         }
@@ -109,7 +104,7 @@
           "S3Bucket": {"Ref": "S3Bucket"},
           "S3Key": {"Ref": "S3Key"},
           "DatabaseURL": {"Fn::GetAtt": ["AppResource", "Outputs.DatabaseURL"]},
-          "SecurityGroup": {"Ref": "SecurityGroup"},
+          "SecurityGroup": {"Fn::GetAtt": ["AppResource", "Outputs.DBSecurityGroup"]},
           "HealthcheckURL": {"Ref": "HealthcheckURL"},
           "KeyName": {"Ref": "KeyName"}
         }

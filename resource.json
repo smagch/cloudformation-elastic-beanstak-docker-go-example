@@ -51,13 +51,30 @@
       "MinValue": "5",
       "MaxValue": "20",
       "ConstraintDescription": "must be between 5 and 20Gb."
-    },
-    "SecurityGroup": {
-      "Type": "String",
-      "Description": "ElasticBeanstalk Security group that can access Database"
     }
   },
   "Resources": {
+    "DBSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow the Elastic Beanstalk instances to access the RDS database",
+        "VpcId": {
+          "Ref": "VpcId"
+        },
+        "SecurityGroupIngress": [{
+          "IpProtocol": "tcp",
+          "FromPort": "5432",
+          "ToPort": "5432",
+          "CidrIp": "0.0.0.0/0"
+        }],
+        "SecurityGroupEgress": [{
+          "IpProtocol": "tcp",
+          "FromPort": "5432",
+          "ToPort": "5432",
+          "CidrIp": "0.0.0.0/0"
+        }]
+      }
+    },
     "DBSubnetGroup": {
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
@@ -76,11 +93,14 @@
         "MasterUsername": { "Ref": "DBUsername" } ,
         "MasterUserPassword": { "Ref": "DBPassword" },
         "DBSubnetGroupName": { "Ref": "DBSubnetGroup" },
-        "VPCSecurityGroups": [ { "Ref": "SecurityGroup" }  ]
+        "VPCSecurityGroups": [ { "Ref": "DBSecurityGroup" }  ]
       }
     }
   },
   "Outputs": {
+    "DBSecurityGroup": {
+      "Value":  { "Ref": "DBSecurityGroup" }
+    },
     "DatabaseURL": {
       "Description": "URL of Database",
       "Value": {
