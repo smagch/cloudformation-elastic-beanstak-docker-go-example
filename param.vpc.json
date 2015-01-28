@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "VPCAvailabilityZone1",
+    "ParameterValue": "ap-northeast-1c"
+  },
+  {
+    "ParameterKey": "VPCAvailabilityZone2",
+    "ParameterValue": "ap-northeast-1c"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": ""
+  }
+]
