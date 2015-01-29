@@ -16,6 +16,12 @@ aws ec2 describe-images --owners amazon
 If you use t2 instance for both Bastion and NAT instance, Name of the `ImageId`
 should be `amzn-ami-vpc-nat-hvm-*` for NAT, `amzn-ami-hvm-*` for Bastion.
 
+After successful deployment, you can access Bastion instance with ssh.
+
+```sh
+ssh ec2-user@{Elastic IP address of Public Subnet}
+```
+
 ## Useful links
 
 - <http://blogs.aws.amazon.com/application-management/post/Tx2DUJYZVBMJ92J/>
