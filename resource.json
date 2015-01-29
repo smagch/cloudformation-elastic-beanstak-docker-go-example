@@ -6,9 +6,17 @@
       "Type": "String",
       "Description": "VpcId of your existing Virtual Private Cloud (VPC)"
     },
-    "Subnets": {
-      "Type": "CommaDelimitedList",
-      "Description": "The list of SubnetIds, for at least two Availability Zones in the region in your Virtual Private Cloud (VPC)"
+    "PrivateSubnet1": {
+      "Type": "String",
+      "Description": "Private Subnet"
+    },
+    "PrivateSubnet2": {
+      "Type": "String",
+      "Description": "Private Subnet"
+    },
+    "InstanceSecurityGroup" : {
+      "Description" : "A VPC Security Group ID that has ingress access to a NAT instance in the VPC. EB instances will be launched into this group.",
+      "Type": "String"
     },
     "DBName": {
       "Default": "mydb",
@@ -65,7 +73,9 @@
           "IpProtocol": "tcp",
           "FromPort": "5432",
           "ToPort": "5432",
-          "CidrIp": "0.0.0.0/0"
+          "SourceSecurityGroupId": {
+            "Ref": "InstanceSecurityGroup"
+          }
         }],
         "SecurityGroupEgress": [{
           "IpProtocol": "tcp",
@@ -79,7 +89,10 @@
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
         "DBSubnetGroupDescription": "Subnets available for the RDS DB Instance",
-        "SubnetIds": { "Ref": "Subnets" }
+        "SubnetIds": [
+          {"Ref": "PrivateSubnet1"},
+          {"Ref": "PrivateSubnet2"}
+        ]
       }
     },
     "MyDB": {

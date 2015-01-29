@@ -2,17 +2,17 @@
   "AWSTemplateFormatVersion" : "2010-09-09",
   "Description" : "AWS CloudFormation Master Stack Test",
   "Parameters" : {
-    "PublicSubnet": {
+    "VPCAvailabilityZone1": {
+      "Description": "One of two Availability Zones that will be used to create subnets.",
       "Type": "String",
-      "Description": "Public Subnet"
+      "MinLength": "1",
+      "MaxLength": "255"
     },
-    "PrivateSubnet": {
+    "VPCAvailabilityZone2": {
+      "Description": "Two of two Availability Zones that will be used to create subnets. Must be different than VPCAvailabilityZone2.",
       "Type": "String",
-      "Description": "PrivateSubnet"
-    },
-    "VpcId": {
-      "Type": "String",
-      "Description": "VPC Id"
+      "MinLength": "1",
+      "MaxLength": "255"
     },
     "S3Bucket": {
       "Type": "String",
@@ -29,6 +29,10 @@
     "KeyName": {
       "Type": "String",
       "Description": "EC2 Key name"
+    },
+    "VPCTemplateKey": {
+      "Type": "String",
+      "Description": "VPC Template S3 Key"
     },
     "AppTemplateKey": {
       "Type": "String",
@@ -59,6 +63,25 @@
     }
   },
   "Resources" : {
+    "VPCScaffold": {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : {
+          "Fn::Join" : ["/",
+            [
+              "https://s3-ap-northeast-1.amazonaws.com",
+              {"Ref": "S3Bucket"},
+              {"Ref": "VPCTemplateKey"}
+            ]
+          ]
+        },
+        "Parameters" : {
+          "KeyName": { "Ref" : "KeyName" },
+          "VPCAvailabilityZone1": { "Ref" : "VPCAvailabilityZone1" },
+          "VPCAvailabilityZone2": { "Ref" : "VPCAvailabilityZone2" }
+        }
+      }
+    },
     "AppResource": {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
@@ -72,15 +95,10 @@
           ]
         },
         "Parameters" : {
-          "Subnets": {
-            "Fn::Join": [",",
-              [
-                {"Ref": "PublicSubnet"},
-                {"Ref": "PrivateSubnet"}
-              ]
-            ]
-          },
-          "VpcId": {"Ref": "VpcId"},
+          "PrivateSubnet1" : { "Fn::GetAtt" : ["VPCScaffold", "Outputs.PrivateSubnet1"] },
+          "PrivateSubnet2" : { "Fn::GetAtt" : ["VPCScaffold", "Outputs.PrivateSubnet2"] },
+          "VpcId": { "Fn::GetAtt" : ["VPCScaffold", "Outputs.VpcId"] },
+          "InstanceSecurityGroup" : { "Fn::GetAtt" : ["VPCScaffold", "Outputs.InstanceSecurityGroup"] },
           "DBUsername": {"Ref": "DBUsername"},
           "DBPassword": {"Ref": "DBPassword"}
         }
@@ -99,14 +117,19 @@
           ]
         },
         "Parameters" : {
-          "Subnets": {"Ref": "PublicSubnet"},
-          "VpcId": {"Ref": "VpcId"},
+          "VpcId": { "Fn::GetAtt" : ["VPCScaffold", "Outputs.VpcId"] },
           "S3Bucket": {"Ref": "S3Bucket"},
           "S3Key": {"Ref": "S3Key"},
           "DatabaseURL": {"Fn::GetAtt": ["AppResource", "Outputs.DatabaseURL"]},
-          "SecurityGroup": {"Fn::GetAtt": ["AppResource", "Outputs.DBSecurityGroup"]},
+          "InstanceSecurityGroup": { "Fn::GetAtt" : ["VPCScaffold", "Outputs.InstanceSecurityGroup"] },
           "HealthcheckURL": {"Ref": "HealthcheckURL"},
-          "KeyName": {"Ref": "KeyName"}
+          "KeyName": {"Ref": "KeyName"},
+          "PrivateSubnets" : {
+            "Fn::Join": [",", [{ "Fn::GetAtt" : ["VPCScaffold", "Outputs.PrivateSubnet1"] }, { "Fn::GetAtt" : ["VPCScaffold", "Outputs.PrivateSubnet2"] }]]
+          },
+          "PublicSubnets" : {
+            "Fn::Join": [",", [{ "Fn::GetAtt" : ["VPCScaffold", "Outputs.PublicSubnet1"] }, { "Fn::GetAtt" : ["VPCScaffold", "Outputs.PublicSubnet2"] }]]
+          }
         }
       }
     }

@@ -1,15 +1,11 @@
 [
   {
-    "ParameterKey": "VpcId",
-    "ParameterValue": "default-vpc-id"
+    "ParameterKey": "VPCAvailabilityZone1",
+    "ParameterValue": "ap-northeast-1c"
   },
   {
-    "ParameterKey": "PublicSubnet",
-    "ParameterValue": "subnets-1",
-  },
-  {
-    "ParameterKey": "PrivateSubnet",
-    "ParameterKey": "subnet-2",
+    "ParameterKey": "VPCAvailabilityZone2",
+    "ParameterValue": "ap-northeast-1a"
   },
   {
     "ParameterKey": "S3Key",
@@ -28,11 +24,15 @@
     "ParameterValue": ""
   },
   {
+    "ParameterKey": "VPCTemplateKey",
+    "ParameterValue": "vpc.json"
+  },
+  {
     "ParameterKey": "AppTemplateKey",
     "ParameterValue": "eb.json"
   },
   {
-    "ParameterKey": "DBUserName",
+    "ParameterKey": "DBUsername",
     "ParameterValue": "mydb"
   },
   {
