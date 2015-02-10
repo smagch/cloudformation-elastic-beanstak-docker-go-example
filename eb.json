@@ -6,10 +6,6 @@
       "Type" : "String",
       "Description" : "A comma-delimited list of public VPC subnets. ELBs will be launched into this subnet."
     },
-    "PrivateSubnets" : {
-      "Type" : "String",
-      "Description" : "A comma-delimited list of private VPC subnets. Auto Scaling and RDS will be launched into this subnet."
-    },
     "VpcId": {
       "Type": "String",
       "Description": "VPC Id"
@@ -74,12 +70,17 @@
           {
             "Namespace": "aws:ec2:vpc",
             "OptionName": "Subnets",
-            "Value": { "Ref" : "PrivateSubnets" }
+            "Value": { "Ref" : "PublicSubnets" }
           },
           {
             "Namespace": "aws:ec2:vpc",
             "OptionName": "ELBSubnets",
             "Value": { "Ref" : "PublicSubnets" }
+          },
+          {
+            "Namespace": "aws:ec2:vpc",
+            "OptionName": "AssociatePublicIpAddress",
+            "Value": "true"
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",

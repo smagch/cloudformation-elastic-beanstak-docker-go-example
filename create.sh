@@ -36,11 +36,8 @@ upload_app_template eb.json $BUCKET_NAME "$(find_param AppTemplateKey)"
 upload_app_template resource.json $BUCKET_NAME "$(find_param ResourcesTemplateKey)"
 upload_app_template vpc.json $BUCKET_NAME "$(find_param VPCTemplateKey)"
 
-# upload git archive to S3
-git archive --format zip HEAD | aws s3 cp - s3://${BUCKET_NAME}/${KEY_NAME}
-
 aws cloudformation create-stack \
-   --stack-name my-final-stack \
+   --stack-name my-final-2 \
    --template-body file://master.json \
    --region ap-northeast-1 \
    --parameters file://param.json \

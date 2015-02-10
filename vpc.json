@@ -31,14 +31,6 @@
       "ConstraintDescription": "must be a valid EC2 instance type."
     },
 
-    "NATInstanceType": {
-      "Description": "NET Device EC2 instance type",
-      "Type": "String",
-      "Default": "t2.micro",
-      "AllowedValues": ["t1.micro", "t2.micro", "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.xlarge", "m3.2xlarge", "c1.medium", "c1.xlarge", "cc1.4xlarge", "cc2.8xlarge", "cg1.4xlarge"],
-      "ConstraintDescription": "must be a valid EC2 instance type."
-    },
-
     "VPCAvailabilityZone1": {
       "Description": "One of two Availability Zones that will be used to create subnets.",
       "Type": "String",
@@ -50,11 +42,6 @@
       "Type": "String",
       "MinLength": "1",
       "MaxLength": "255"
-    },
-    "NATDeviceImageId": {
-      "Description": "ImageId of NAT Instance",
-      "Type": "String",
-      "Default": "ami-27d6e626"
     },
     "BastionHostImageId": {
       "Description": "ImageId of BastionHost",
@@ -459,19 +446,6 @@
       }
     },
 
-    "PrivateRoute": {
-      "Type": "AWS::EC2::Route",
-      "Properties": {
-        "RouteTableId": {
-          "Ref": "PrivateRouteTable"
-        },
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "InstanceId": {
-          "Ref": "NATDevice"
-        }
-      }
-    },
-
     "PrivateNetworkAcl": {
       "Type": "AWS::EC2::NetworkAcl",
       "Properties": {
@@ -547,72 +521,6 @@
         "NetworkAclId": {
           "Ref": "PrivateNetworkAcl"
         }
-      }
-    },
-
-    "NATIPAddress": {
-      "Type": "AWS::EC2::EIP",
-      "DependsOn": "GatewayToInternet",
-      "Properties": {
-        "Domain": "vpc",
-        "InstanceId": {
-          "Ref": "NATDevice"
-        }
-      }
-    },
-
-    "NATDevice": {
-      "Type": "AWS::EC2::Instance",
-      "Properties": {
-        "InstanceType": {
-          "Ref": "NATInstanceType"
-        },
-        "SubnetId": {
-          "Ref": "PublicSubnet1"
-        },
-        "SourceDestCheck": "false",
-        "ImageId": {
-          "Ref": "NATDeviceImageId"
-        },
-        "SecurityGroupIds": [{
-          "Ref": "NATSecurityGroup"
-        }]
-      }
-    },
-
-    "NATSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "Enable internal access to the NAT device",
-        "VpcId": {
-          "Ref": "VPC"
-        },
-        "SecurityGroupIngress": [{
-          "IpProtocol": "tcp",
-          "FromPort": "80",
-          "ToPort": "80",
-          "SourceSecurityGroupId": {
-            "Ref": "InstanceSecurityGroup"
-          }
-        }, {
-          "IpProtocol": "tcp",
-          "FromPort": "443",
-          "ToPort": "443",
-          "SourceSecurityGroupId": {
-            "Ref": "InstanceSecurityGroup"
-          }
-        }],
-        "SecurityGroupEgress": [{
-          "IpProtocol": "tcp",
-          "FromPort": "80",
-          "ToPort": "80",
-          "CidrIp": "0.0.0.0/0"
-        }, {
-          "IpProtocol": "tcp",
-          "FromPort": "443",
-          "ToPort": "443",
-          "CidrIp": "0.0.0.0/0"
-        }]
       }
     },
 
