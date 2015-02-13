@@ -573,29 +573,98 @@
         "VpcId": {
           "Ref": "VPC"
         },
-        "SecurityGroupIngress": [{
-          "IpProtocol": "tcp",
-          "FromPort": "22",
-          "ToPort": "22",
-          "CidrIp": {
-            "Ref": "SSHFrom"
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {
+              "Ref": "SSHFrom"
+            }
           }
-        }],
-        "SecurityGroupEgress": [{
-          "IpProtocol": "tcp",
-          "FromPort": "22",
-          "ToPort": "22",
-          "CidrIp": {
-            "Fn::FindInMap": ["SubnetConfig", "Private1", "CIDR"]
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private1", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private2", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private1", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private2", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private1", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private2", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5432",
+            "ToPort": "5432",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private1", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5432",
+            "ToPort": "5432",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private2", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11211",
+            "ToPort": "11211",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private1", "CIDR"]
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11211",
+            "ToPort": "11211",
+            "CidrIp": {
+              "Fn::FindInMap": ["SubnetConfig", "Private2", "CIDR"]
+            }
           }
-        }, {
-          "IpProtocol": "tcp",
-          "FromPort": "22",
-          "ToPort": "22",
-          "CidrIp": {
-            "Fn::FindInMap": ["SubnetConfig", "Private2", "CIDR"]
-          }
-        }]
+        ]
       }
     }
   },
@@ -605,6 +674,12 @@
       "Description": "IP Address of the Bastion host",
       "Value": {
         "Ref": "BastionIPAddress"
+      }
+    },
+    "BastionSecurityGroup": {
+      "Description": "BastionHost SecurityGroup",
+      "Value": {
+        "Ref": "BastionSecurityGroup"
       }
     },
     "InstanceSecurityGroup" : {

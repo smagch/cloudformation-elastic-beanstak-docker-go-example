@@ -18,6 +18,10 @@
       "Description" : "A VPC Security Group ID that has ingress access to a NAT instance in the VPC. EB instances will be launched into this group.",
       "Type": "String"
     },
+    "BastionSecurityGroup": {
+      "Description": "BastionSecurityGroup",
+      "Type": "String"
+    },
     "DBName": {
       "Default": "mydb",
       "Description": "The database name",
@@ -69,14 +73,24 @@
         "VpcId": {
           "Ref": "VpcId"
         },
-        "SecurityGroupIngress": [{
-          "IpProtocol": "tcp",
-          "FromPort": "5432",
-          "ToPort": "5432",
-          "SourceSecurityGroupId": {
-            "Ref": "InstanceSecurityGroup"
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5432",
+            "ToPort": "5432",
+            "SourceSecurityGroupId": {
+              "Ref": "InstanceSecurityGroup"
+            }
+          },
+          {
+           "IpProtocol": "tcp",
+            "FromPort": "5432",
+            "ToPort": "5432",
+            "SourceSecurityGroupId": {
+              "Ref": "BastionSecurityGroup"
+            }
           }
-        }],
+        ],
         "SecurityGroupEgress": [{
           "IpProtocol": "tcp",
           "FromPort": "5432",

@@ -99,6 +99,7 @@
           "PrivateSubnet2" : { "Fn::GetAtt" : ["VPCScaffold", "Outputs.PrivateSubnet2"] },
           "VpcId": { "Fn::GetAtt" : ["VPCScaffold", "Outputs.VpcId"] },
           "InstanceSecurityGroup" : { "Fn::GetAtt" : ["VPCScaffold", "Outputs.InstanceSecurityGroup"] },
+          "BastionSecurityGroup": {"Fn::GetAtt": ["VPCScaffold", "Outputs.BastionSecurityGroup"]},
           "DBUsername": {"Ref": "DBUsername"},
           "DBPassword": {"Ref": "DBPassword"}
         }
